@@ -264,7 +264,6 @@ public class PowerPlayIronCore extends OpMode {
         powerRight = 0;
         powerLeft = 0;
 
-// tanvi is the bestestestestestest
 
         if(Math.abs(gamepad1.left_stick_y) > DEADZONE)
         {

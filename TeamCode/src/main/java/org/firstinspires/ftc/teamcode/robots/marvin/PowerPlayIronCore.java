@@ -132,11 +132,11 @@ public class PowerPlayIronCore extends OpMode {
         /*
         ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
-        if  {
+        if (gamepad1.a) {
             runAuton = true;
             setupArm(true); //reset encoders
         }
-        if  {
+        if (gamepad1.b) {
             runAuton = false;
             setupArm(false);
         }
@@ -284,10 +284,10 @@ public class PowerPlayIronCore extends OpMode {
         double r = Math.hypot(strafe, forward);
         double robotAngle = Math.atan2(forward, strafe) - Math.PI / 4;
         double rightX = rotation;
-        final double v1 = r * Math.cos(robotAngle) * 2 - rightX;
-        final double v2 = r * Math.sin(robotAngle) * 2 + rightX;
-        final double v3 = r * Math.sin(robotAngle) * 2 - rightX;
-        final double v4 = r * Math.cos(robotAngle) * 2 + rightX;
+        final double v1 = r * Math.cos(robotAngle) * 4.5 - rightX;
+        final double v2 = r * Math.sin(robotAngle) * 4.5 + rightX;
+        final double v3 = r * Math.sin(robotAngle) * 4.5 - rightX;
+        final double v4 = r * Math.cos(robotAngle) * 4.5 + rightX;
         motorFrontLeft.setPower(v1);
         motorFrontRight.setPower(v2);
         motorBackLeft.setPower(v3);

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robots.goldenduck;
 
+import static org.firstinspires.ftc.teamcode.robots.catbot.util.Utils.servoNormalize;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -36,10 +38,13 @@ public class GoldenDuckOpMode extends OpMode {
         driveTrain.motorInit();
         servoRailgun = hardwareMap.get(Servo.class, "servoRailgun");
         claws = hardwareMap.get(Servo.class, "claw");
+        clawWrist = hardwareMap.get(Servo.class, "clawWrist");
     }
 
     @Override
     public void init_loop() {
+        arm();
+        claws();
         telemetry.update();
     }
 
@@ -50,12 +55,16 @@ public class GoldenDuckOpMode extends OpMode {
         if (gamepad1.dpad_down) {
             calibrate = false;
         }
+
+        //speed boost - untested
         if (gamepad1.dpad_up) {
             if (driveTrain.robotSpeed == 1)
                 driveTrain.robotSpeed = .5;
             else
                 driveTrain.robotSpeed = 1;
         }
+        claws();
+
     }
 
     class DriveTrain {
@@ -133,6 +142,10 @@ public class GoldenDuckOpMode extends OpMode {
             motorBackLeft = this.hardwareMap.get(DcMotorEx.class, "motorBackLeft");
             motorFrontRight = this.hardwareMap.get(DcMotorEx.class, "motorFrontRight");
             motorBackRight = this.hardwareMap.get(DcMotorEx.class, "motorBackRight");
+            arm = this.hardwareMap.get(DcMotorEx.class, "arm");
+            arm.setTargetPosition(0);
+            arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            arm.setPower(0);
             motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -171,20 +184,25 @@ public class GoldenDuckOpMode extends OpMode {
     private double wristPosition = 0;
     private double targetWristPosition = 0;
     // arm and claw variables
-    private double max = 1;
-    private double min = -1;
+    private double max = 0.6;
+    private double min = .4;
     private int armPosition = 0;
     private int targetArmPos = 0;
     private int maxArm = Integer.MAX_VALUE;
 
+    public void arm(){
+        telemetry.addData("arm position", arm.getCurrentPosition());
+        //targetArmPos
+
+    }
     public void claws() {
         telemetry.addData("santa claws claws", claws.getPosition());
         if (gamepad1.left_bumper)
             if(claws.getPosition() < max)
-                claws.setPosition(claws.getPosition() + 0.02);
+                claws.setPosition(servoNormalize(1080));
         if (gamepad1.right_bumper)
             if(claws.getPosition() > min)
-                 claws.setPosition(claws.getPosition() - 0.02);
+                 claws.setPosition(servoNormalize(1080));
         //value of claw cannot surpass xyz
 
     }
@@ -192,15 +210,19 @@ public class GoldenDuckOpMode extends OpMode {
         public void clawWrist() {
             telemetry.addData("Claw wrist position:", clawWrist.getPosition());
             if (gamepad2.b)
-                clawWrist.setPosition(clawWrist.getPosition() + 0.02);
+                clawWrist.setPosition(servoNormalize(1080));
             if (gamepad2.a)
-                clawWrist.setPosition(clawWrist.getPosition() - 0.02);
+                clawWrist.setPosition(servoNormalize(1080));
         }
-    public void servo() {
+    public void setServoRailgun() {
         telemetry.addData("servo position", servoRailgun.getPosition());
         if (gamepad2.y) {
-            servoRailgun.setPosition(servoRailgun.getPosition() + 1 );
+            servoRailgun.setPosition(servoNormalize(1080));
 
+
+        }
+        if (gamepad2.x){
+            servoRailgun.setPosition(servoNormalize(1825));
         }
 
     }

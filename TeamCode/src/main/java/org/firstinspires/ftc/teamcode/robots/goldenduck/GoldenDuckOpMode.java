@@ -11,9 +11,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robots.taubot.vision.pipeline.AprilTagDetectionPipeline;
-import org.openftc.apriltag.AprilTagDetection;
-import org.openftc.easyopencv.OpenCvCamera;
 
 @Config ("GoldenDuckGameVariables")
 @TeleOp(name="Golden Duck OpMode", group="Challenge")
@@ -36,8 +33,8 @@ public class GoldenDuckOpMode extends OpMode {
     public void init() {
         driveTrain = new DriveTrain(telemetry, hardwareMap);
         driveTrain.motorInit();
-        servoRailgun = hardwareMap.get(Servo.class, "servoRailgun");
-        claws = hardwareMap.get(Servo.class, "claw");
+        servoRailgun = hardwareMap.get(Servo.class,"servoRailgun");
+        servoClaw = hardwareMap.get(Servo.class, "claw");
         clawWrist = hardwareMap.get(Servo.class, "clawWrist");
     }
 
@@ -45,6 +42,8 @@ public class GoldenDuckOpMode extends OpMode {
     public void init_loop() {
         arm();
         claws();
+        clawWrist();
+        setServoRailgun();
         telemetry.update();
     }
 
@@ -171,7 +170,7 @@ public class GoldenDuckOpMode extends OpMode {
     private DcMotor arm = null;
     private DcMotor elbow = null;
     private Servo clawWrist = null;
-    private Servo claws = null;
+    private Servo servoClaw = null;
     private Servo servoRailgun = null;
     private Servo wrist = null;
     // regular drive
@@ -196,34 +195,53 @@ public class GoldenDuckOpMode extends OpMode {
 
     }
     public void claws() {
-        telemetry.addData("santa claws claws", claws.getPosition());
-        if (gamepad1.left_bumper)
-            if(claws.getPosition() < max)
-                claws.setPosition(servoNormalize(1080));
-        if (gamepad1.right_bumper)
-            if(claws.getPosition() > min)
-                 claws.setPosition(servoNormalize(1080));
+        telemetry.addData("santa claws claws", servoClaw.getPosition());
+        if (gamepad1.left_bumper) {
+            servoClaw.setPosition(servoNormalize(1935));
+        }
+        else{
+
+        }
+        if (gamepad1.right_bumper) {
+            servoClaw.setPosition(servoNormalize(1665));
+        }
+        else{
+
+        }
         //value of claw cannot surpass xyz
 
     }
 
         public void clawWrist() {
             telemetry.addData("Claw wrist position:", clawWrist.getPosition());
-            if (gamepad2.b)
-                clawWrist.setPosition(servoNormalize(1080));
-            if (gamepad2.a)
-                clawWrist.setPosition(servoNormalize(1080));
+            if (gamepad1.dpad_right) {
+                clawWrist.setPosition(servoNormalize(2105));
+            }
+            else{
+
+            }
+            if (gamepad1.dpad_left) {
+                clawWrist.setPosition(servoNormalize(1221));
+            }
+            else{
+
+            }
         }
     public void setServoRailgun() {
         telemetry.addData("servo position", servoRailgun.getPosition());
-        if (gamepad2.y) {
+        if (gamepad1.dpad_up) {
             servoRailgun.setPosition(servoNormalize(1080));
-
+        }
+        else{
 
         }
-        if (gamepad2.x){
+        if (gamepad1.dpad_down){
             servoRailgun.setPosition(servoNormalize(1825));
         }
+        else{
+
+        }
+
 
     }
 }
